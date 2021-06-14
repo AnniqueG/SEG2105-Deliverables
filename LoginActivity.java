@@ -2,7 +2,9 @@ package com.example.courseselectionapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     //Go to success page
     //Check is user is already in database if not add them to it
 
-    public void clickEnter(View view){
+    public void clickEnter(View view) {
         //Depending on which button was clicked go to different page
         //Get role, if teacher go to teacher success page, admin -> adminSuccess, and student -> success
         //For now i'll make it just go to adminSuccess page
@@ -49,23 +51,44 @@ public class LoginActivity extends AppCompatActivity {
 
         String role = SignInAsActivity.getRole();
 
-        if(role.equals("Instructor")){
+        if(username.equals("") || password.equals("")){ //Or if user not in database
+            showMessage("Error", "Login invalid");
+            return;
+        }
+
+        if (role.equals("Instructor")) {
             Intent intent = new Intent(this, InstructorSuccessActivity.class);
             startActivity(intent);
-        }
-        else if(role.equals("Student")){
+        } else if (role.equals("Student")) {
             Intent intent = new Intent(this, StudentSuccessActivity.class);
             startActivity(intent);
+        } else if (role.equals("Administrator")) {
+            //Check if correct user and pass for admin
+            //user: admin pass: admin123
+            if (!username.equals("admin") && !password.equals("admin123")) {
+                //Display error message
+
+                showMessage("Error", "Admin login invalid");
+
+            } else {
+                Intent intent = new Intent(this, SuccessAdminActivity.class);
+                startActivity(intent);
+            }
+
+
+            //Check if user in database if not throw invalid message for login(BONUS)
+            //Otherwise add them to database
+
         }
-        else if(role.equals("Administrator")){
-            Intent intent = new Intent(this, SuccessAdminActivity.class);
-            startActivity(intent);
-        }
-
-        //Check if user in database if not throw invalid message (BONUS)
-        //Otherwise add them to database
+    }
 
 
+    public void showMessage(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 
     public static String getUserName(){
