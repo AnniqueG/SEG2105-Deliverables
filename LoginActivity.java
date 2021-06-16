@@ -80,6 +80,11 @@ public class LoginActivity extends AppCompatActivity {
             //Otherwise add them to database
 
         }
+        MyDBHandler dbHandler = new MyDBHandler(this);
+        //Need username & password
+
+        User user = new User(username, password, role);
+        dbHandler.addUser(user);
     }
 
 
