@@ -81,13 +81,31 @@ public class LoginActivity extends AppCompatActivity {
 
         }
         MyDBHandler dbHandler = new MyDBHandler(this);
-        //Need username & password
+       //Check if user already in database
+        if(lookupUser(username) == false) {
+            //Add user to database
+            User user = new User(username, password, role);
+            dbHandler.addUser(user);
+        }
+        //If user already in database don't add another copy
+    }
+    
+    public boolean lookupUser(String username){
+        MyDBHandler dbHandler = new MyDBHandler(this);
+        User user = dbHandler.findUser(userTXT.getText().toString());
 
-        User user = new User(username, password, role);
-        dbHandler.addUser(user);
+        if(user != null){
+            return true;
+        }else{
+           return false;
+        }
     }
 
-
+     /**
+     * Check if user already in database
+     * @param username
+     * @return true if the user is already in database, otherwise false
+     */
     public void showMessage(String title, String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
