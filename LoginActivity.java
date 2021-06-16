@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (role.equals("Administrator")) {
             //Check if correct user and pass for admin
             //user: admin pass: admin123
-            if (!username.equals("admin") && !password.equals("admin123")) {
+            if (!username.equals("admin") || !password.equals("admin123")) {
                 //Display error message
 
                 showMessage("Error", "Admin login invalid");
@@ -73,23 +73,29 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, SuccessAdminActivity.class);
                 startActivity(intent);
+
+                //Add user here so it doesn't add invalid login attempts
+                MyDBHandler dbHandler = new MyDBHandler(this);
+
+                //Check if user already in database
+                if(lookupUser(username) == false) {
+                    //Add user to database
+                    User user = new User(username, password, role);
+                    dbHandler.addUser(user);
+                }
+                //If user already in database don't add another copy
             }
 
 
-            //Check if user in database if not throw invalid message for login(BONUS)
-            //Otherwise add them to database
+        }
 
-        }
-        MyDBHandler dbHandler = new MyDBHandler(this);
-       //Check if user already in database
-        if(lookupUser(username) == false) {
-            //Add user to database
-            User user = new User(username, password, role);
-            dbHandler.addUser(user);
-        }
-        //If user already in database don't add another copy
     }
     
+     /**
+     * Check if user already in database
+     * @param username
+     * @return true if the user is already in database, otherwise false
+     */
     public boolean lookupUser(String username){
         MyDBHandler dbHandler = new MyDBHandler(this);
         User user = dbHandler.findUser(userTXT.getText().toString());
@@ -101,11 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-     /**
-     * Check if user already in database
-     * @param username
-     * @return true if the user is already in database, otherwise false
-     */
+    
     public void showMessage(String title, String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
