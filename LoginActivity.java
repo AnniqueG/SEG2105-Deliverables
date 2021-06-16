@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         String role = SignInAsActivity.getRole();
 
         if(username.equals("") || password.equals("")){ //Or if user not in database
-            showMessage("Error", "Login invalid");
+            showMessage("Error", "Invalid username and password, try again");
             return;
         }
 
