@@ -30,20 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         passTXT = findViewById(R.id.password);
     }
 
-    //What happens when we click enter
-    //Go to success page
-    //Check is user is already in database if not add them to it
-
+    /**
+    * Method executes when the 'submit' button of the login page is clicked
+    */
     public void clickEnter(View view) {
-        //Depending on which button was clicked go to different page
-        //Get role, if teacher go to teacher success page, admin -> adminSuccess, and student -> success
-        //For now i'll make it just go to adminSuccess page
-
-        //Get the role
-        //MODIFIED TODAY
-//
-        //Save Name and Username
-        //"Welcome 'firstname/username'! You are logged in as 'role'."
 
         username = userTXT.getText().toString();
         password = passTXT.getText().toString();
@@ -51,11 +41,14 @@ public class LoginActivity extends AppCompatActivity {
 
         String role = SignInAsActivity.getRole();
 
+        //Check if username and password are valid (not just space)
         if(username.equals("") || password.equals("")){ //Or if user not in database
             showMessage("Error", "Invalid username and password, try again");
             return;
         }
 
+        //Checks what role the user clicked on the 'sign in as' page and brings them to the 
+        //Corresponding success page
         if (role.equals("Instructor")) {
             Intent intent = new Intent(this, InstructorSuccessActivity.class);
             startActivity(intent);
@@ -75,19 +68,18 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }
-
-
         }
-        //Add user here so it doesn't add invalid login attempts
+        //Create an instance of the user database
         MyDBHandler dbHandler = new MyDBHandler(this);
 
         //Check if user already in database
-        if(lookupUser(username) == false) {
+        //If user already in database don't add another copy, otherwise add
+        if(lookupUser(username) == false) { //Call method to check if user in database already
             //Add user to database
             User user = new User(username, password, role);
             dbHandler.addUser(user);
         }
-        //If user already in database don't add another copy
+        
 
     }
     
@@ -107,7 +99,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    
+    /**
+    * To dusplay the box with text
+    */
     public void showMessage(String title, String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -116,10 +110,16 @@ public class LoginActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+    *@return the users username
+    */
     public static String getUserName(){
         return username;
     }
 
+    /**
+    *@return the users password
+    */
     public static String getPassWord(){
         return password;
     }
