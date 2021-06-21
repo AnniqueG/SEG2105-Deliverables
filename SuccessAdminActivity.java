@@ -32,12 +32,17 @@ public class SuccessAdminActivity extends AppCompatActivity {
         welcomeTXT.setText("Welcome '" + userName + "'! You are logged in as 'Administrator'.");
     }
 
-    //When you click MANAGE COURSES BUTTON go to manage user acitivity
+    /**
+    * Brings you to the manage courses page when you click the 'manage courses' button
+    */
     public void manageCourses(View view){
         Intent intent = new Intent(this, ManageAdminActivity.class);
         startActivity(intent);
     }
 
+    /**
+    * Brings you to the manage users page when you click the 'manage users' button
+    */
     public void DeleteUserAccount(View view){
         Intent intent = new Intent(this, ManageUsersActivity.class);
         startActivity(intent);
