@@ -70,24 +70,24 @@ public class LoginActivity extends AppCompatActivity {
 
                 showMessage("Error", "Admin login invalid");
 
-            } else {
+           } else {
                 Intent intent = new Intent(this, SuccessAdminActivity.class);
                 startActivity(intent);
 
-                //Add user here so it doesn't add invalid login attempts
-                MyDBHandler dbHandler = new MyDBHandler(this);
-
-                //Check if user already in database
-                if(lookupUser(username) == false) {
-                    //Add user to database
-                    User user = new User(username, password, role);
-                    dbHandler.addUser(user);
-                }
-                //If user already in database don't add another copy
             }
 
 
         }
+        //Add user here so it doesn't add invalid login attempts
+        MyDBHandler dbHandler = new MyDBHandler(this);
+
+        //Check if user already in database
+        if(lookupUser(username) == false) {
+            //Add user to database
+            User user = new User(username, password, role);
+            dbHandler.addUser(user);
+        }
+        //If user already in database don't add another copy
 
     }
     
