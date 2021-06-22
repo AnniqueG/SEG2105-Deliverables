@@ -21,7 +21,7 @@ public class SuccessAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_success_admin);
 
         //
-        manageBTN = findViewById(R.id.manageaccounts);
+        manageBTN = findViewById(R.id.manageCourses);
         deleteAccountBTN = findViewById(R.id.deleteaccounts);
 
         //
