@@ -9,29 +9,29 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Database for courses
  */
-public class MyDBHandlerCourse extends SQLiteOpenHelper{
+public class MyDBHandlerInstructor extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "courseDB.db";
+    private static final String DATABASE_NAME = "instructorDB.db";
     private static final String TABLE_COURSES= "courses";
-    private static final String COLUMN_ID = "_id"; //Index 0 ?
-    private static final String COLUMN_NAME= "name"; //Index 1?
-    private static final String COLUMN_CODE = "code"; //Index 2?
-
-    //
+    private static final String COLUMN_ID = "_id"; //Index 0
+    private static final String COLUMN_NAME= "name"; //Index 1
+    private static final String COLUMN_CODE = "code"; //Index 2
     private static final String COLUMN_CAPACITY = "capacity"; //Index 3
     private static final String COLUMN_HOURS = "hours"; //Index 4
     private static final String COLUMN_DAYS = "days"; //Index 5
     private static final String COLUMN_DESCRIPTION = "description"; //Index 6
+    private static final String COLUMN_INSTRUCTOR_NAME = "iname"; // index 7
 
-    public MyDBHandlerCourse(Context context){
+    public MyDBHandlerInstructor(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db){
         String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_COURSES + "(" + COLUMN_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_NAME + " TEXT," + COLUMN_CODE + " DOUBLE" +
-                ")";
+                " INTEGER PRIMARY KEY," + COLUMN_NAME + " TEXT," + COLUMN_CODE + " DOUBLE,"
+                + COLUMN_CAPACITY + " INTEGER," + COLUMN_HOURS + " TEXT," + COLUMN_DAYS + " TEXT," +
+                COLUMN_DESCRIPTION + " TEXT," + COLUMN_INSTRUCTOR_NAME + " TEXT" + ")";
         db.execSQL(CREATE_USERS_TABLE);
     }
 
@@ -47,6 +47,11 @@ public class MyDBHandlerCourse extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, course.getCourseName());
         values.put(COLUMN_CODE, course.getCourseCode());
+        values.put(COLUMN_DAYS, course.getDays());
+        values.put(COLUMN_HOURS, course.getHours());
+        values.put(COLUMN_DESCRIPTION, course.getDescription());
+        values.put(COLUMN_CAPACITY, course.getCapacity());
+        values.put(COLUMN_INSTRUCTOR_NAME, course.getInstructor());
 
         //insert into table and close
         db.insert(TABLE_COURSES, null, values);
@@ -55,14 +60,13 @@ public class MyDBHandlerCourse extends SQLiteOpenHelper{
     }
 
 
-    public boolean deleteCourse(String name){
+    public boolean deleteCourse(String name, String instructor){
         boolean result = false;
         SQLiteDatabase db = this.getWritableDatabase();
 
         //run a query to find the product then delete
         //SELECT * FROM TABLE_COURSES WHERE COLUMN_NAME = courseName
-        String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME + " =\""
-                + name + "\"";
+        String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME + " =\"" + name + "\"" + " AND " + COLUMN_INSTRUCTOR_NAME + " =\"" + instructor + "\"";
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()){
             String idStr = cursor.getString(0);

@@ -8,6 +8,7 @@ public class Course {
     public String hours;
     public String days;
     public String description;
+    public String instructor;
 
     public Course(){
 
@@ -31,14 +32,16 @@ public class Course {
      * @param hours
      * @param days
      * @param description
+     * @param instructor
      */
-    public Course(String name, int courseCode, int capacity, String hours, String days, String description ){
+    public Course(String name, int courseCode, int capacity, String hours, String days, String description, String instructor ){
         this.name = name;
         this.courseCode = courseCode;
         this.capacity = capacity;
         this.hours = hours;
         this.days = days;
         this.description = description;
+        this.instructor = instructor;
     }
 
 
@@ -51,13 +54,42 @@ public class Course {
     public int getCourseCode(){
         return this.courseCode;
     }
+    public int getCapacity(){
+        return this.capacity;
+    }
+    public String getHours(){
+        return this.hours;
+    }
+    public String getDays(){
+        return this.days;
+    }
+    public String getDescription(){
+        return this.description;
+    }
+    public String getInstructor(){
+        return this.instructor;
+    }
 
     public void setCourseName(String name){
         this.name = name;
     }
-
     public void setCourseCode(int code){
         this.courseCode = code;
+    }
+    public void setCapacity(int capacity){
+        this.capacity = capacity;
+    }
+    public void setHours(String hours){
+        this.hours = hours;
+    }
+    public void setDays(String days){
+        this.days = days;
+    }
+    public void setDescription(String description){
+        this.description = description;
+    }
+    public void setInstructor(String instructor){
+        this.instructor = instructor;
     }
 
 }

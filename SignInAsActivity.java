@@ -30,26 +30,35 @@ public class SignInAsActivity extends AppCompatActivity {
         return role;
     }
 
-    /**
-    * Set role depending on which button is clicked
-    * You can find which button is clicked using the 'view.getID()'
-    */
+    //Bring you to login page, no matter which button is clicked
+    //Save which button was clicked for role variable
     public void login(View view){
 
+        //MODIFIED TODAY
+        //Save role
+        //Go to login page
         if(view.getId() == R.id.teacher){
             role = "Instructor";
-           
+            //Go to teacher success page
+            //Intent intent = new Intent(this, InstructorSuccessActivity.class);
+            //startActivity(intent);
+
+            //Set role to teacher
         }
         else if(view.getId() == R.id.student){
             role = "Student";
-          
+            //Go to student success page
+//            Intent intent = new Intent(this, StudentSuccessActivity.class);
+//            startActivity(intent);
+            //Role is student
         }
         else if(view.getId() == R.id.admin){
             role = "Administrator";
-            
+            //Go to admin success page
+//            Intent intent = new Intent(this, SuccessAdminActivity.class);
+//            startActivity(intent);
         }
 
-        //Go to LoginActivity page 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 

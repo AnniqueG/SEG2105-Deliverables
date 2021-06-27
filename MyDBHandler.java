@@ -73,5 +73,33 @@ public class MyDBHandler extends SQLiteOpenHelper{
 
     }
 
+    /**
+     *
+     * @param username
+     * @return true if the user already exists (in database), false otherwise
+     */
+    public User findUser(String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //run a query to find the product
+        //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_USERNAME +
+                " = \"" + username + "\"";
+        Cursor cursor = db.rawQuery(query, null);
+
+        //Create an object and get the result
+        User user = new User();
+        if(cursor.moveToFirst()) {
+           // product.setID(Integer.parseInt(cursor.getString(0)));
+            user.setUserName(cursor.getString(1));
+            //product.setPrice(Double.parseDouble(cursor.getString(2)));
+            cursor.close();
+        }else{
+            user = null;
+        }
+        db.close();
+        return user;
+    }
+
 
 }

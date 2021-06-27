@@ -2,10 +2,14 @@ package com.example.courseselectionapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
 public class ManageUsersActivity extends AppCompatActivity {
-    
+
     EditText usernameTXT;
     EditText passWordTXT;
 
@@ -13,11 +17,12 @@ public class ManageUsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_users);
+
         //
         usernameTXT = findViewById(R.id.aUserName);
         passWordTXT = findViewById(R.id.aPassword);
     }
-    
+
     public void viewAll(View view){
         MyDBHandler dbHandler = new MyDBHandler(this);
         Cursor res = dbHandler.getAllData();
@@ -56,4 +61,6 @@ public class ManageUsersActivity extends AppCompatActivity {
             usernameTXT.setText("No Match Found");
         }
     }
+
+
 }

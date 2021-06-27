@@ -2,20 +2,20 @@ package com.example.courseselectionapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-/**
-*Class for the managing courses page 
-*/
 public class ManageAdminActivity extends AppCompatActivity {
 
     Button viewBTN;
     Button editBTN;
     Button deleteBTN;
     Button createBTN;
-     //
+    //
     EditText newNameTXT;
     EditText newCodeTXT;
     //
@@ -27,7 +27,7 @@ public class ManageAdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_admin);
 
-        //Set all the buttons to their ids
+        //Initialize all buttons and text views
         viewBTN = findViewById(R.id.viewAllCourses);
         editBTN = findViewById(R.id.editCourse);
         deleteBTN = findViewById(R.id.deleteCourse);
@@ -38,7 +38,10 @@ public class ManageAdminActivity extends AppCompatActivity {
         bottomCodeTXT = findViewById(R.id.code);
         newNameTXT = findViewById(R.id.nName);
         newCodeTXT = findViewById(R.id.nCode);
-    }/**
+
+    }
+
+    /**
      * Runs when the 'view all courses' button is pressed
      * @param view button clicked
      */
