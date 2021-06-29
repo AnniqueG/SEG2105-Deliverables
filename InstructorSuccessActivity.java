@@ -97,13 +97,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         builder.show();
     }
 
-//    public static String getUserName(){
-//        return username;
-//    }
-//
-//    public static String getPassWord(){
-//        return password;
-//    }
+
 
     /**
      * Create and Add a new course to the instructor db
@@ -120,15 +114,16 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         String description = descriptionTXT.getText().toString();
         String capacity = capacityTXT.getText().toString();
 
-        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("") || description.equals("") || capacity.equals("") ){
+        //Check if instructor is already assigned
+
+        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("")
+                || description.equals("") || capacity.equals("") ){
             showMessage("Error", "At least one field is empty, try again...");
         }
-        else if (false) {
-            // is course name in courseDB.db?
-        }
         // invalid input
-        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity) || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
-            System.out.println("hee");
+        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity)
+                || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
+
             if (!isAlphaNumeric(courseName)){
                 courseNameTXT.setError("Invalid string!");
             }
@@ -152,19 +147,23 @@ public class InstructorSuccessActivity extends AppCompatActivity {
             //Make new course
             Course course = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
 
-            //If the course is already in the database (by name only) the course isn't added again
-            if(lookupCourse(courseName) == null) {
-                idbHandler.addCourse(course);
-                courseNameTXT.setText("");
-                courseCodeTXT.setText("");
-                daysTXT.setText("");
-                hoursTXT.setText("");
-                descriptionTXT.setText("");
-                capacityTXT.setText("");
-                return;
+            if(course == null) {
+                showMessage("Error", "Can't create a course");
+            }
+            else {
+
+                    idbHandler.addCourse(course);
+
+                    courseNameTXT.setText("");
+                    courseCodeTXT.setText("");
+                    daysTXT.setText("");
+                    hoursTXT.setText("");
+                    descriptionTXT.setText("");
+                    capacityTXT.setText("");
+                    return;
+                }
             }
         }
-    }
 
     /**
      * Find a specific course in database
