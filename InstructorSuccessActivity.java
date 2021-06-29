@@ -145,25 +145,26 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         }
         else {
             //Make new course
-            Course course = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
 
+            Course course = lookupCourse(courseName);
             if(course == null) {
                 showMessage("Error", "Can't create a course");
             }
+
             else {
+                Course cc = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
+                idbHandler.addCourse(cc);
 
-                    idbHandler.addCourse(course);
-
-                    courseNameTXT.setText("");
-                    courseCodeTXT.setText("");
-                    daysTXT.setText("");
-                    hoursTXT.setText("");
-                    descriptionTXT.setText("");
-                    capacityTXT.setText("");
-                    return;
-                }
+                courseNameTXT.setText("");
+                courseCodeTXT.setText("");
+                daysTXT.setText("");
+                hoursTXT.setText("");
+                descriptionTXT.setText("");
+                capacityTXT.setText("");
+                return;
             }
         }
+    }
 
     /**
      * Find a specific course in database
