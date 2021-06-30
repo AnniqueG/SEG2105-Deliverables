@@ -97,7 +97,13 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         builder.show();
     }
 
-
+//    public static String getUserName(){
+//        return username;
+//    }
+//
+//    public static String getPassWord(){
+//        return password;
+//    }
 
     /**
      * Create and Add a new course to the instructor db
@@ -114,16 +120,15 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         String description = descriptionTXT.getText().toString();
         String capacity = capacityTXT.getText().toString();
 
-        //Check if instructor is already assigned
-
-        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("")
-                || description.equals("") || capacity.equals("") ){
+        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("") || description.equals("") || capacity.equals("") ){
             showMessage("Error", "At least one field is empty, try again...");
         }
+        else if (false) {
+            // is course name in courseDB.db?
+        }
         // invalid input
-        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity)
-                || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
-
+        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity) || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
+            System.out.println("hee");
             if (!isAlphaNumeric(courseName)){
                 courseNameTXT.setError("Invalid string!");
             }
@@ -145,16 +150,11 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         }
         else {
             //Make new course
+            Course course = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
 
-            Course course = lookupCourse(courseName);
-            if(course == null) {
-                showMessage("Error", "Can't create a course");
-            }
-
-            else {
-                Course cc = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
-                idbHandler.addCourse(cc);
-
+            //If the course is already in the database (by name only) the course isn't added again
+            if(lookupCourse(courseName) == null) {
+                idbHandler.addCourse(course);
                 courseNameTXT.setText("");
                 courseCodeTXT.setText("");
                 daysTXT.setText("");
@@ -187,10 +187,11 @@ public class InstructorSuccessActivity extends AppCompatActivity {
             unassignTXT.setText("No Match Found");
         }
     }
-    public boolean isAlphaNumeric(String myString) {
+    public static boolean isAlphaNumeric(String myString) {
         return myString.matches("[A-Za-z0-9]+");
     }
-    public boolean isNumber(String myNumber) {
+
+    public static boolean isNumber(String myNumber) {
         double n;
         try {
             n = Integer.parseInt(myNumber);
