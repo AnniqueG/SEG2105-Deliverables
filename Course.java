@@ -90,6 +90,7 @@ public class Course {
     }
     public void setInstructor(String instructor){
         this.instructor = instructor;
+        
     }
 
 }
