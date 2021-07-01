@@ -9,9 +9,16 @@ public class Course {
     public String days;
     public String description;
     public String instructor;
+    public String hasInstructor;
+
 
     public Course(){
 
+    }
+
+    public Course(String courseName, String instructor){
+        this.name = courseName;
+        this.instructor = instructor;
     }
 
     /**
@@ -69,6 +76,9 @@ public class Course {
     public String getInstructor(){
         return this.instructor;
     }
+    public String getHasInstructor(){
+        return this.hasInstructor;
+    }
 
     public void setCourseName(String name){
         this.name = name;
@@ -90,7 +100,9 @@ public class Course {
     }
     public void setInstructor(String instructor){
         this.instructor = instructor;
-        
+    }
+    public void setHasInstructor(String instructor){
+        this.hasInstructor = instructor;
     }
 
 }

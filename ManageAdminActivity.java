@@ -22,6 +22,8 @@ public class ManageAdminActivity extends AppCompatActivity {
     EditText bottomNameTXT;
     EditText bottomCodeTXT;
 
+    public int index = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,8 +105,15 @@ public class ManageAdminActivity extends AppCompatActivity {
             if(lookupCourse() == null) {
                 cdbHandler.addCourse(course);
 
+                //
+                Course c = new Course(courseName, "");
+                c.setInstructor("");
+
+
+
                 bottomNameTXT.setText("");
                 bottomCodeTXT.setText("");
+
                 return;
             }
         }
@@ -122,7 +131,7 @@ public class ManageAdminActivity extends AppCompatActivity {
             bottomCodeTXT.setText("Record Deleted"); //If found it deletes the course
             bottomNameTXT.setText("");
         }else{
-           bottomCodeTXT.setText("No Match Found");//If not found
+            bottomCodeTXT.setText("No Match Found");//If not found
         }
     }
 

@@ -48,7 +48,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
     }
 
     public void viewAll(View view){
-        MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
+        MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
         Cursor res = dbHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
@@ -59,14 +59,16 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         //Get all Data using res object
         while(res.moveToNext()) {
             buff.append("Course Name: " + res.getString(1) + "\n");
-            buff.append("Course Code: " + res.getString(2) + "\n\n");
+            buff.append("Course Code: " + res.getString(2) + "\n");
+            buff.append("Has instructor: " + res.getString(3) + "\n\n");
         }
-        showMessage("Database", buff.toString());    }
-
+        res.close();
+        showMessage("Database", buff.toString());
+    }
 
     public void viewMy(View view){
-        MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
-        Cursor res = dbHandler.getAllCourses();
+        MyDBHandlerInstructor iidbHandler = new MyDBHandlerInstructor(this);
+        Cursor res = iidbHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
             return;
@@ -86,6 +88,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
                 buff.append("Course Instructor: " + res.getString(7) + "\n\n");
             }
         }
+        res.close();
         showMessage("Database", buff.toString());
     }
 
@@ -97,13 +100,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         builder.show();
     }
 
-//    public static String getUserName(){
-//        return username;
-//    }
-//
-//    public static String getPassWord(){
-//        return password;
-//    }
+
 
     /**
      * Create and Add a new course to the instructor db
@@ -120,15 +117,16 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         String description = descriptionTXT.getText().toString();
         String capacity = capacityTXT.getText().toString();
 
-        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("") || description.equals("") || capacity.equals("") ){
+        //Check if instructor is already assigned
+
+        if(courseName.equals("") || courseCode.equals("") || days.equals("") || hours.equals("")
+                || description.equals("") || capacity.equals("") ){
             showMessage("Error", "At least one field is empty, try again...");
         }
-        else if (false) {
-            // is course name in courseDB.db?
-        }
         // invalid input
-        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity) || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
-            System.out.println("hee");
+        else if (!isAlphaNumeric(courseName) || !isNumber(courseCode) || !isNumber(capacity)
+                || !isAlphaNumeric(days) || !isAlphaNumeric(hours) || !isAlphaNumeric(description)) {
+
             if (!isAlphaNumeric(courseName)){
                 courseNameTXT.setError("Invalid string!");
             }
@@ -150,18 +148,42 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         }
         else {
             //Make new course
-            Course course = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, username);
 
-            //If the course is already in the database (by name only) the course isn't added again
-            if(lookupCourse(courseName) == null) {
-                idbHandler.addCourse(course);
-                courseNameTXT.setText("");
-                courseCodeTXT.setText("");
-                daysTXT.setText("");
-                hoursTXT.setText("");
-                descriptionTXT.setText("");
-                capacityTXT.setText("");
-                return;
+            Course course = lookupCourseCourseDB(courseName);
+            if(course == null) {
+                showMessage("Error", "Course does not exist. Admin should create it first.");
+            }
+
+            else {
+                //Check if instructor already assigned
+                String hInstructor = course.hasInstructor;
+                boolean hasInstructor = false;
+                try {
+                    hasInstructor = Boolean.parseBoolean(hInstructor);
+                }
+                catch (Exception e) {
+                    System.out.println(e);
+                }
+                if(hasInstructor) {
+                    showMessage("Error", "Course already has an instructor.");
+                }
+                else {
+                    Course cc = new Course(courseName, Integer.parseInt(courseCode), Integer.parseInt(capacity), hours, days, description, this.username);
+                    idbHandler.addCourse(cc);
+                    // set has_instructor to true
+                    MyDBHandlerCourse cdbHandler = new MyDBHandlerCourse(this);
+                    cdbHandler.deleteCourse(course.name);
+                    cdbHandler.addCourseInst(course);
+
+                //d.addCourse(cc);
+
+                    courseNameTXT.setText("");
+                    courseCodeTXT.setText("");
+                    daysTXT.setText("");
+                    hoursTXT.setText("");
+                    descriptionTXT.setText("");
+                    capacityTXT.setText("");
+                }
             }
         }
     }
@@ -176,22 +198,32 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         return course;
 
     }
+    public Course lookupCourseCourseDB(String name){
+        MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
+        Course course = dbHandler.findCourse(name);
+        return course;
+
+    }
 
     public void unassignInstructor(View view){
         MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
         boolean result = dbHandler.deleteCourse(unassignTXT.getText().toString(), username);
         if(result){
+            MyDBHandlerCourse cdbHandler = new MyDBHandlerCourse(this);
+            // three lines below is to change has_instructor to false
+            Course c = cdbHandler.findCourse(unassignTXT.getText().toString());
+            cdbHandler.deleteCourse(c.name);
+            cdbHandler.addCourse(c);
             unassignTXT.setText("Course Unassigned");
 
         }else{
             unassignTXT.setText("No Match Found");
         }
     }
-    public static boolean isAlphaNumeric(String myString) {
+    public boolean isAlphaNumeric(String myString) {
         return myString.matches("[A-Za-z0-9]+");
     }
-
-    public static boolean isNumber(String myNumber) {
+    public boolean isNumber(String myNumber) {
         double n;
         try {
             n = Integer.parseInt(myNumber);

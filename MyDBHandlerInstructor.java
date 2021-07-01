@@ -93,7 +93,7 @@ public class MyDBHandlerInstructor extends SQLiteOpenHelper{
     /**
      * If the course is in the database it is return, otherwise null is returned
      * @param name of course
-     * @return course
+     * @return instructor
      */
     public Course findCourse(String name){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -108,14 +108,15 @@ public class MyDBHandlerInstructor extends SQLiteOpenHelper{
         Course course = new Course();
         if(cursor.moveToFirst()) {
             course.setCourseName(cursor.getString(1));
-            course.setCourseCode(cursor.getInt(2));
+            course.setInstructor(cursor.getString(2));
             cursor.close();
         }else{
-            course = null;
+            return null;
         }
         db.close();
         return course;
     }
+
 
 
 
