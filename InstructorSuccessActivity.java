@@ -48,7 +48,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
     }
 
     public void viewAll(View view){
-        MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
+        MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
         Cursor res = dbHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
@@ -220,10 +220,10 @@ public class InstructorSuccessActivity extends AppCompatActivity {
             unassignTXT.setText("No Match Found");
         }
     }
-    public boolean isAlphaNumeric(String myString) {
+    public static boolean isAlphaNumeric(String myString) {
         return myString.matches("[A-Za-z0-9]+");
     }
-    public boolean isNumber(String myNumber) {
+    public static boolean isNumber(String myNumber) {
         double n;
         try {
             n = Integer.parseInt(myNumber);
