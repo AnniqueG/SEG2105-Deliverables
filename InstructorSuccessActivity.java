@@ -195,42 +195,19 @@ public class InstructorSuccessActivity extends AppCompatActivity {
      */
     public void lookupCourse(View view){
 
-        MyDBHandlerInstructor idbHandler = new MyDBHandlerInstructor(this);
-        Course course = null;
-        Cursor res = null;
-
-        String save = searchCodeTXT.getText().toString();
-        int searchCode = Integer.parseInt(save);
-        String searchName = searchNameTXT.getText().toString();
-
-        if(save.equals("") && searchName.equals("")){
-            showMessage("Error","Please input a search parameter first.");
+         if(searchNameTXT.getText().toString().equals("")) {
+            //Searching by course code
+//            String code = searchCodeTXT.getText().toString();
+//            Course course = lookupCourseCourseDB(name);
+//            String str = Boolean.toString(name.equals(""));
+//            showMessage("Course:", name + course.getCourseCode());
+        }else {
+            //Search by course name 
+            String name = searchNameTXT.getText().toString();
+            Course course = lookupCourseCourseDB(name);
+            String str = Boolean.toString(name.equals(""));
+            showMessage("Course:", name + "" + course.getCourseCode());
         }
-        else if(!save.equals("") && !searchName.equals("")){
-            showMessage("Error", "Only one search parameter can be entered at a time");
-        }
-        else if(!save.equals("")){
-            res = idbHandler.findCourse(searchCode);
-
-        }
-        else if(!searchName.equals("")) {
-            res = idbHandler.findCourse(searchName);
-        }
-
-        if(res == null){
-            showMessage("Error", "No data in Database");
-            return;
-        }
-
-        StringBuffer buff = new StringBuffer();
-        //Get all Data using res object
-        while(res.moveToNext()){
-            buff.append("Course Name: " + res.getString(1) + "\n");
-            buff.append("Course Code: " + res.getString(2) + "\n");
-            buff.append("Has instructor: " + res.getString(3) + "\n\n");
-        }
-        res.close();
-        showMessage("Database", buff.toString());
 
     }
 
