@@ -91,30 +91,62 @@ public class MyDBHandlerInstructor extends SQLiteOpenHelper{
 
 
     /**
-     * If the course is in the database it is return, otherwise null is returned
+     * Searches for course in database by course name. If none found, returns null.
      * @param name of course
      * @return instructor
      */
-    public Course findCourse(String name){
+    public Cursor findCourse(String name){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //run a query to find the product
         //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
         String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
                 " = \"" + name + "\"";
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
+                " = \"" + name + "\"", null);
+        return cursor;
 
-        //Create an object and get the result
-        Course course = new Course();
-        if(cursor.moveToFirst()) {
-            course.setCourseName(cursor.getString(1));
-            course.setInstructor(cursor.getString(2));
-            cursor.close();
-        }else{
-            return null;
-        }
-        db.close();
-        return course;
+//        //Create an object and get the result
+//        Course course = new Course();
+//        if(cursor.moveToFirst()) {
+//            course.setCourseName(cursor.getString(1));
+//            course.setInstructor(cursor.getString(2));
+//            cursor.close();
+//        }else{
+//            return null;
+//        }
+//        db.close();
+//        return course;
+    }
+
+    /**
+     * Searches for course in database by course code. If none found, returns null.
+     * @param code of course
+     * @return instructor
+     */
+    public Cursor findCourse(int code){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //run a query to find the product
+        //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
+        String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
+                " = \"" + code + "\"";
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
+                " = \"" + code + "\"", null);
+
+        return cursor;
+
+//        //Create an object and get the result
+//        Course course = new Course();
+//        if(cursor.moveToFirst()) {
+//            course.setCourseName(cursor.getString(1));
+//            course.setInstructor(cursor.getString(2));
+//            cursor.close();
+//        }else{
+//            return null;
+//        }
+//        db.close();
+//        return course;
     }
 
 

@@ -23,6 +23,8 @@ public class InstructorSuccessActivity extends AppCompatActivity {
     EditText descriptionTXT;
     EditText capacityTXT;
     EditText unassignTXT;
+    EditText searchCodeTXT;
+    EditText searchNameTXT;
     //Button assignCourseButton;
     //Button unassignCourseButton;
 
@@ -44,6 +46,8 @@ public class InstructorSuccessActivity extends AppCompatActivity {
         descriptionTXT = findViewById(R.id.editTextDescription);
         capacityTXT = findViewById(R.id.editTextCapacity);
         unassignTXT = findViewById(R.id.editTextCourseNameUnassign);
+        searchCodeTXT = findViewById(R.id.editTextSearchCourseCode);
+        searchNameTXT = findViewById(R.id.editTextSearchCourseName);
 
     }
 
@@ -175,7 +179,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
                     cdbHandler.deleteCourse(course.name);
                     cdbHandler.addCourseInst(course);
 
-                //d.addCourse(cc);
+                    //d.addCourse(cc);
 
                     courseNameTXT.setText("");
                     courseCodeTXT.setText("");
@@ -190,14 +194,48 @@ public class InstructorSuccessActivity extends AppCompatActivity {
 
     /**
      * Find a specific course in database
-     * @return course
      */
-    public Course lookupCourse(String name){
+    public void lookupCourse(View view){
+
         MyDBHandlerInstructor idbHandler = new MyDBHandlerInstructor(this);
-        Course course = idbHandler.findCourse(name);
-        return course;
+        Course course = null;
+        Cursor res = null;
+
+        String save = searchCodeTXT.getText().toString();
+        int searchCode = Integer.parseInt(save);
+        String searchName = searchNameTXT.getText().toString();
+
+        if(save.equals("") && searchName.equals("")){
+            showMessage("Error","Please input a search parameter first.");
+        }
+        else if(!save.equals("") && !searchName.equals("")){
+            showMessage("Error", "Only one search parameter can be entered at a time");
+        }
+        else if(!save.equals("")){
+            res = idbHandler.findCourse(searchCode);
+
+        }
+        else if(!searchName.equals("")) {
+            res = idbHandler.findCourse(searchName);
+        }
+
+        if(res == null){
+            showMessage("Error", "No data in Database");
+            return;
+        }
+
+        StringBuffer buff = new StringBuffer();
+        //Get all Data using res object
+        while(res.moveToNext()){
+            buff.append("Course Name: " + res.getString(1) + "\n");
+            buff.append("Course Code: " + res.getString(2) + "\n");
+            buff.append("Has instructor: " + res.getString(3) + "\n\n");
+        }
+        res.close();
+        showMessage("Database", buff.toString());
 
     }
+
     public Course lookupCourseCourseDB(String name){
         MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
         Course course = dbHandler.findCourse(name);
@@ -220,6 +258,8 @@ public class InstructorSuccessActivity extends AppCompatActivity {
             unassignTXT.setText("No Match Found");
         }
     }
+
+
     public static boolean isAlphaNumeric(String myString) {
         return myString.matches("[A-Za-z0-9]+");
     }
