@@ -48,7 +48,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
     }
 
     public void viewAll(View view){
-        MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
+        MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
         Cursor res = dbHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
@@ -61,8 +61,8 @@ public class InstructorSuccessActivity extends AppCompatActivity {
             buff.append("Course Name: " + res.getString(1) + "\n");
             buff.append("Course Code: " + res.getString(2) + "\n\n");
         }
-        showMessage("Database", buff.toString());
-    }
+        showMessage("Database", buff.toString());    }
+
 
     public void viewMy(View view){
         MyDBHandlerInstructor dbHandler = new MyDBHandlerInstructor(this);
