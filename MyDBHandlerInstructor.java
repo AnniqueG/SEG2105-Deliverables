@@ -89,66 +89,40 @@ public class MyDBHandlerInstructor extends SQLiteOpenHelper{
 
     }
 
-
-    /**
-     * Searches for course in database by course name. If none found, returns null.
-     * @param name of course
-     * @return instructor
+/**
+     * Find and return course with given name
+     * Set all new info
+     * @param name
+     * @return course
      */
-    public Cursor findCourse(String name){
+    public Course findCourseTwo(String name){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //run a query to find the product
         //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
         String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
                 " = \"" + name + "\"";
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
-                " = \"" + name + "\"", null);
-        return cursor;
+        Cursor cursor = db.rawQuery(query, null);
 
-//        //Create an object and get the result
-//        Course course = new Course();
-//        if(cursor.moveToFirst()) {
-//            course.setCourseName(cursor.getString(1));
-//            course.setInstructor(cursor.getString(2));
-//            cursor.close();
-//        }else{
-//            return null;
-//        }
-//        db.close();
-//        return course;
+        //Create an object and get the result
+        Course course = new Course();
+        if(cursor.moveToFirst()) {
+            course.setCourseName(cursor.getString(1));
+            course.setCourseCode(cursor.getInt(2));
+            course.setCapacity(cursor.getInt(3));
+            course.setHours(cursor.getString(4));
+            course.setDays(cursor.getString(5));
+            course.setDescription(cursor.getString(6));
+            course.setInstructor(cursor.getString(7));
+            
+            cursor.close();
+        }else{
+            course = null;
+        }
+        db.close();
+        return course;
     }
-
-    /**
-     * Searches for course in database by course code. If none found, returns null.
-     * @param code of course
-     * @return instructor
-     */
-    public Cursor findCourse(int code){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        //run a query to find the product
-        //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
-        String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
-                " = \"" + code + "\"";
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_NAME +
-                " = \"" + code + "\"", null);
-
-        return cursor;
-
-//        //Create an object and get the result
-//        Course course = new Course();
-//        if(cursor.moveToFirst()) {
-//            course.setCourseName(cursor.getString(1));
-//            course.setInstructor(cursor.getString(2));
-//            cursor.close();
-//        }else{
-//            return null;
-//        }
-//        db.close();
-//        return course;
-    }
-
+   
 
 
 
