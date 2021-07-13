@@ -53,11 +53,12 @@ public class StudentSuccessActivity extends AppCompatActivity {
     }
 
     /**
-     * Database of all enrolled courses
+     * Database of all enrolled courses (including the course's capacity, instructor, days e.t.c.
      * @param view
      */
     public void viewMy(View view){
         MyDBHandlerStudent sDBHandler = new MyDBHandlerStudent(this);
+        
         Cursor res = sDBHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
@@ -67,19 +68,36 @@ public class StudentSuccessActivity extends AppCompatActivity {
         StringBuffer buff = new StringBuffer();
         //Get all Data using res object
         while(res.moveToNext()){
-            // filter by instructor
+
+
             if (name.equals(res.getString(8))) { //student name
                 buff.append("Course Name: " + res.getString(1) + "\n");
                 buff.append("Course Code: " + res.getString(2) + "\n");
-                buff.append("Course Capacity: " + res.getString(3) + "\n");
-                buff.append("Course Hours: " + res.getString(4) + "\n");
-                buff.append("Course Days: " + res.getString(5) + "\n");
-                buff.append("Course Description: " + res.getString(6) + "\n");
-                buff.append("Course Instructor: " + res.getString(7) + "\n\n");
+
+               Course c = lookupCourseIntructorDB(res.getString(1));
+//
+                buff.append("Course Capacity: " + c.getCapacity() + "\n");
+                buff.append("Course Hours: " + c.getHours() + "\n");
+                buff.append("Course Days: " + c.getDays() + "\n");
+                buff.append("Course Description: " + c.getDescription() + "\n");
+                buff.append("Course Instructor: " + c.getInstructor()+ "\n\n");
             }
         }
         res.close();
         showMessage("Database", buff.toString());
+    }
+
+    /**
+     * Find and return course in instructor database
+     * To get access to all course details such as description
+     * @param name
+     * @return
+     */
+    public Course lookupCourseIntructorDB(String name){
+        MyDBHandlerInstructor iDBHandler = new MyDBHandlerInstructor(this);
+        Course course = iDBHandler.findCourseTwo(name);
+        return course;
+
     }
 
 
@@ -146,10 +164,7 @@ public class StudentSuccessActivity extends AppCompatActivity {
         boolean result = dbHandler.deleteCourse(courseNameTXT.getText().toString());
         if(result){
             MyDBHandlerCourse cdbHandler = new MyDBHandlerCourse(this);
-//            // three lines below is to change has_instructor to false
-//            Course c = cdbHandler.findCourse(unassignTXT.getText().toString());
-//            cdbHandler.deleteCourse(c.name);
-//            cdbHandler.addCourse(c);
+
             courseNameTXT.setText("Course Unassigned");
             courseCodeTXT.setText("");
 
