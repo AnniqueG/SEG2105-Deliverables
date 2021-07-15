@@ -52,7 +52,7 @@ public class InstructorSuccessActivity extends AppCompatActivity {
     }
 
     public void viewAll(View view){
-         MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
+        MyDBHandlerCourse dbHandler = new MyDBHandlerCourse(this);
         Cursor res = dbHandler.getAllCourses();
         if(res.getCount() == 0){
             showMessage("Error", "No data in Database");
@@ -88,6 +88,47 @@ public class InstructorSuccessActivity extends AppCompatActivity {
                 buff.append("Course Days: " + res.getString(5) + "\n");
                 buff.append("Course Description: " + res.getString(6) + "\n");
                 buff.append("Course Instructor: " + res.getString(7) + "\n\n");
+            }
+        }
+        res.close();
+        showMessage("Database", buff.toString());
+    }
+
+
+    public void viewAllStudents(View view){
+        MyDBHandlerInstructor iidbHandler = new MyDBHandlerInstructor(this);
+        Cursor res = iidbHandler.getAllCourses();
+        if(res.getCount() == 0){
+            showMessage("Error", "No data in Database");
+            return;
+        }
+
+        MyDBHandlerStudent sdbHandler = new MyDBHandlerStudent(this);
+        Cursor res2 = sdbHandler.getAllCourses();
+        if(res2.getCount() == 0){
+            showMessage("Error", "No data in Database");
+            return;
+        }
+
+        StringBuffer buff = new StringBuffer();
+        //Get all Data using res object
+        while(res.moveToNext()){
+            // filter by instructor
+            if (username.equals(res.getString(7))) {
+                while(res2.moveToNext()){
+                    if (res2.getString(2).equals(res.getString(2))){
+                        buff.append("Student: " + res2.getString(8) + " Course: " + res.getString(1) + res.getString(2) + "\n");
+                    }
+                }
+                // instructors courses => res.getString(1) and res.getString(2) (name & code)
+
+//                buff.append("Course Name: " + res.getString(1) + "\n");
+//                buff.append("Course Code: " + res.getString(2) + "\n");
+//                buff.append("Course Capacity: " + res.getString(3) + "\n");
+//                buff.append("Course Hours: " + res.getString(4) + "\n");
+//                buff.append("Course Days: " + res.getString(5) + "\n");
+//                buff.append("Course Description: " + res.getString(6) + "\n");
+//                buff.append("Course Instructor: " + res.getString(7) + "\n\n");
             }
         }
         res.close();
@@ -195,14 +236,14 @@ public class InstructorSuccessActivity extends AppCompatActivity {
      */
     public void lookupCourse(View view){
 
-         if(searchNameTXT.getText().toString().equals("")) {
+        if(searchNameTXT.getText().toString().equals("")) {
             //Searching by course code
 //            String code = searchCodeTXT.getText().toString();
 //            Course course = lookupCourseCourseDB(name);
 //            String str = Boolean.toString(name.equals(""));
 //            showMessage("Course:", name + course.getCourseCode());
         }else {
-            //Search by course name 
+            //Search by course name
             String name = searchNameTXT.getText().toString();
             Course course = lookupCourseCourseDB(name);
             String str = Boolean.toString(name.equals(""));

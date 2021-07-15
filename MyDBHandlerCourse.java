@@ -129,6 +129,34 @@ public class MyDBHandlerCourse extends SQLiteOpenHelper{
         return course;
     }
 
+    /**
+     * If the course is in the database it is return, otherwise null is returned
+     * @param name of course
+     * @return course
+     */
+    public Course findCourseCode(int name){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //run a query to find the product
+        //SELECT * FROM TABLE_PRODUCT WHERE COLUMN_PRODUCTNAME = productname
+        String query = "SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_CODE +
+                " = \"" + name + "\"";
+        Cursor cursor = db.rawQuery(query, null);
+
+        //Create an object and get the result
+        Course course = new Course();
+        if(cursor.moveToFirst()) {
+            course.setCourseName(cursor.getString(1));
+            course.setCourseCode(cursor.getInt(2));
+            course.setHasInstructor(cursor.getString(3));
+            cursor.close();
+        }else{
+            course = null;
+        }
+        db.close();
+        return course;
+    }
+
 
 
 
