@@ -76,12 +76,13 @@ public class StudentSuccessActivity extends AppCompatActivity {
             // filter by instructor
             if (name.equals(res.getString(8))) { //student name
                 buff.append("Course Name: " + res.getString(1) + "\n");
-                buff.append("Course Code: " + res.getString(2) + "\n");
-                buff.append("Course Capacity: " + res.getString(3) + "\n");
-                buff.append("Course Hours: " + res.getString(4) + "\n");
-                buff.append("Course Days: " + res.getString(5) + "\n");
-                buff.append("Course Description: " + res.getString(6) + "\n");
-                buff.append("Course Instructor: " + res.getString(7) + "\n\n");
+                buff.append("Course Code: " + res.getString(2) + "\n"); Course c = lookupCourseIntructorDB(res.getString(1));
+//
+                buff.append("Course Capacity: " + c.getCapacity() + "\n");
+                buff.append("Course Hours: " + c.getHours() + "\n");
+                buff.append("Course Days: " + c.getDays() + "\n");
+                buff.append("Course Description: " + c.getDescription() + "\n");
+                buff.append("Course Instructor: " + c.getInstructor()+ "\n\n");
             }
         }
         res.close();
@@ -100,6 +101,19 @@ public class StudentSuccessActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+    }
+
+    /**
+     * Find and return course in instructor database
+     * To get access to all course details such as description
+     * @param name
+     * @return
+     */
+    public Course lookupCourseIntructorDB(String name){
+        MyDBHandlerInstructor iDBHandler = new MyDBHandlerInstructor(this);
+        Course course = iDBHandler.findCourseTwo(name);
+        return course;
+
     }
 
     /**
