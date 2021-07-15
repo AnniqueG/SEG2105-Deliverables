@@ -1,0 +1,41 @@
+    public void newCourse (View view){
+        // saving to instructorDB.db
+        MyDBHandlerStudent sdbHandler = new MyDBHandlerStudent(this);
+
+        //Check if instructor is already assigned
+        String courseName = courseNameTXT.getText().toString();
+        Course course = lookupCourseCourseDB(courseName);
+        if(course == null) {
+            showMessage("Error", "Course does not exist. Admin should create it first.");
+        }
+
+        else {
+            //Check if instructor already assigned
+
+            String time = course.getHours();
+            String days = course.getDays();
+            Cursor res = sdbHandler.getAllCourses();
+
+                if(res.getCount() != 0){
+                    while(res.moveToNext()){
+                        if (name.equals(res.getString(8))) {
+                            Course c = lookupCourseCourseDB(res.getString(1));
+
+                            if(time.equals(c.getHours().trim()) && days.equals(c.getDays().trim().toLowerCase())){
+                                showMessage("Error", "You cannot enrol in two classes offered at the same time on the same day.");
+                            }
+                        }
+                    }
+
+                }
+
+            //Add course to student database
+            sdbHandler.addCourse(course);
+
+            //d.addCourse(cc);
+
+            courseNameTXT.setText("");
+            courseCodeTXT.setText("");
+
+        }
+    }
