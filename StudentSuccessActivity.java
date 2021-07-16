@@ -21,6 +21,8 @@ public class StudentSuccessActivity extends AppCompatActivity {
     EditText searchDayTXT;
     private String name = LoginActivity.getUserName();
 
+    public static String names;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +78,9 @@ public class StudentSuccessActivity extends AppCompatActivity {
             // filter by instructor
             if (name.equals(res.getString(8))) { //student name
                 buff.append("Course Name: " + res.getString(1) + "\n");
-                buff.append("Course Code: " + res.getString(2) + "\n"); Course c = lookupCourseIntructorDB(res.getString(1));
+                StringOfNames(res.getString(1));//Add course name to string of names
+                buff.append("Course Code: " + res.getString(2) + "\n");
+                Course c = lookupCourseIntructorDB(res.getString(1));
 //
                 buff.append("Course Capacity: " + c.getCapacity() + "\n");
                 buff.append("Course Hours: " + c.getHours() + "\n");
@@ -87,6 +91,10 @@ public class StudentSuccessActivity extends AppCompatActivity {
         }
         res.close();
         showMessage("Database", buff.toString());
+    }
+
+    public void StringOfNames(String name){
+        this.names += ("," + name);
     }
 
 
@@ -147,26 +155,50 @@ public class StudentSuccessActivity extends AppCompatActivity {
         // saving to instructorDB.db
         MyDBHandlerStudent sdbHandler = new MyDBHandlerStudent(this);
 
-          //Check if instructor is already assigned
+        //Check if instructor is already assigned
         String courseName = courseNameTXT.getText().toString();
-            Course course = lookupCourseCourseDB(courseName);
-            if(course == null) {
-                showMessage("Error", "Course does not exist. Admin should create it first.");
-            }
+        Course course = lookupCourseCourseDB(courseName);
+        if(course == null) {
+            showMessage("Error", "Course does not exist. Admin should create it first.");
+        }
 
-            else {
-                //Check if instructor already assigned
+        else {
 
-                   //Add course to student database
-                sdbHandler.addCourse(course);
+            //CHeck if there is a conflict
 
-                    //d.addCourse(cc);
+//                boolean conflict = isAMatch(courseName);
+//
+//                //showMessage(conflict == null, "");
+//                if(conflict == true){
+//                    showMessage("Error", "Course conflicts with enrolled course");
+//                    return;
+//                }
 
-                    courseNameTXT.setText("");
-                    courseCodeTXT.setText("");
+            //Add course to student database
+            sdbHandler.addCourse(course);
 
-                }
-            }
+            //d.addCourse(cc);
+
+            courseNameTXT.setText("");
+            courseCodeTXT.setText("");
+
+        }
+    }
+
+//    public boolean isAMatch(String name){
+//        //Check if conflict
+//        MyDBHandlerInstructor iDB = new MyDBHandlerInstructor(this);
+//        Course course = iDB.findCourseTwo(name);
+//     String courseMatchName =  iDB.findCourseMatch(course.getHours(), course.getDays());
+////       if(courseMatchName == null){
+////           showMessage("NULL", "");
+////            return true;
+//        if(courseMatchName.equals(name)){
+//            return true;
+//        }
+//        return false;
+//
+//    }
 
     /**
      * Remove a course from student's database (unenroll them)
@@ -185,12 +217,12 @@ public class StudentSuccessActivity extends AppCompatActivity {
             courseCodeTXT.setText("");
 
         }else{
-           courseNameTXT.setText("No Match Found");
+            courseNameTXT.setText("No Match Found");
         }
     }
 
     /**
-     * Find a specific course in database
+     * Find a specific course in database(code)
      */
     public void lookupCourse(View view){
 // course code course name day of the week
@@ -210,7 +242,7 @@ public class StudentSuccessActivity extends AppCompatActivity {
 
     }
     /**
-     * Find a specific course in database
+     * Find a specific course in database(name)
      */
     public void lookupCourse2(View view){
 // course code course name day of the week
@@ -230,7 +262,7 @@ public class StudentSuccessActivity extends AppCompatActivity {
 
     }
     /**
-     * Find a specific course in database
+     * Find a specific course in database(day)
      */
     public void lookupCourse3(View view){
 // course code course name day of the week
@@ -244,6 +276,10 @@ public class StudentSuccessActivity extends AppCompatActivity {
             //Search by course name
             String name = searchDayTXT.getText().toString();
             Course course = lookupCourseDayCourseDB(name);
+            if(course == null){
+                showMessage("Error", "No course on " + name);
+                return;
+            }
             String str = Boolean.toString(name.equals(""));
             showMessage("Course:", name + " " + course.getCourseName() + course.getCourseCode());
         }
@@ -252,8 +288,4 @@ public class StudentSuccessActivity extends AppCompatActivity {
 
 
 
-        }
-
-
-
-
+}
