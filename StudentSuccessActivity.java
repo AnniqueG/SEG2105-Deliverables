@@ -159,8 +159,9 @@ public class StudentSuccessActivity extends AppCompatActivity {
         //Check if instructor is already assigned
         String courseName = courseNameTXT.getText().toString();
         Course course = lookupCourseCourseDB(courseName);
-        String time = lookupCourseCourseDB(courseName).getHours();
-        String day = lookupCourseCourseDB(courseName).getHours();
+        //Changed this so it get's the course from the instructor DB otherwise the hours and days would be null 
+        String time = lookupCourseIntructorDB(courseName).getHours();
+        String day = lookupCourseIntructorDB(courseName).getDays();
 
         if(course == null) {
             showMessage("Error", "Course does not exist. Admin should create it first.");
@@ -201,18 +202,11 @@ public class StudentSuccessActivity extends AppCompatActivity {
             Course c = lookupCourseIntructorDB(res.getString(1));
             
             if((c.getDays().equals(day)) && (c.getHours().equals(time))){
-                flag = true;
-                break;
+               return true; //You can just return right away you don't need the flag 
             }
 
         }
-//       if(courseMatchName == null){
-//           showMessage("NULL", "");
-//            return true;
-        if(!flag){
-            return false;
-        }
-        return true;
+    return false; 
 
     }
 
