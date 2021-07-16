@@ -1,3 +1,4 @@
+
 package com.example.courseselectionapp;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -158,6 +159,9 @@ public class StudentSuccessActivity extends AppCompatActivity {
         //Check if instructor is already assigned
         String courseName = courseNameTXT.getText().toString();
         Course course = lookupCourseCourseDB(courseName);
+        String time = lookupCourseCourseDB(courseName).getHours();
+        String day = lookupCourseCourseDB(courseName).getHours();
+
         if(course == null) {
             showMessage("Error", "Course does not exist. Admin should create it first.");
         }
@@ -166,13 +170,13 @@ public class StudentSuccessActivity extends AppCompatActivity {
 
             //CHeck if there is a conflict
 
-//                boolean conflict = isAMatch(courseName);
-//
-//                //showMessage(conflict == null, "");
-//                if(conflict == true){
-//                    showMessage("Error", "Course conflicts with enrolled course");
-//                    return;
-//                }
+                boolean conflict = isAConflict(time,day);
+
+                //showMessage(conflict == null, "");
+                if(conflict){
+                    showMessage("Error", "Course conflicts with enrolled course");
+                    return;
+                }
 
             //Add course to student database
             sdbHandler.addCourse(course);
@@ -185,20 +189,32 @@ public class StudentSuccessActivity extends AppCompatActivity {
         }
     }
 
-//    public boolean isAMatch(String name){
-//        //Check if conflict
-//        MyDBHandlerInstructor iDB = new MyDBHandlerInstructor(this);
-//        Course course = iDB.findCourseTwo(name);
-//     String courseMatchName =  iDB.findCourseMatch(course.getHours(), course.getDays());
-////       if(courseMatchName == null){
-////           showMessage("NULL", "");
-////            return true;
-//        if(courseMatchName.equals(name)){
+
+    public boolean isAConflict(String time, String day){
+        //Check if conflict
+        MyDBHandlerInstructor iDB = new MyDBHandlerInstructor(this);
+        MyDBHandlerStudent sDBHandler = new MyDBHandlerStudent(this);
+        Cursor res = sDBHandler.getAllCourses();
+
+        boolean flag = false;
+        while(res.moveToNext()){
+            Course c = lookupCourseIntructorDB(res.getString(1));
+            
+            if((c.getDays().equals(day)) && (c.getHours().equals(time))){
+                flag = true;
+                break;
+            }
+
+        }
+//       if(courseMatchName == null){
+//           showMessage("NULL", "");
 //            return true;
-//        }
-//        return false;
-//
-//    }
+        if(!flag){
+            return false;
+        }
+        return true;
+
+    }
 
     /**
      * Remove a course from student's database (unenroll them)
